@@ -1,0 +1,261 @@
+{
+  "summary": {
+    "generatedAt": "2026-06-13T18:09:58.956209Z",
+    "accountId": "acct-api-output-20260613180958",
+    "creditEventId": "evt-api-credit-20260613180958",
+    "debitEventId": "evt-api-debit-20260613180958",
+    "expectedBalance": "110.00 USD",
+    "actualBalance": "110.0 USD",
+    "eventCount": 2,
+    "transactionCount": 2,
+    "allExpectedStatusesMet": true
+  },
+  "steps": [
+    {
+      "name": "Submit credit event",
+      "method": "POST",
+      "url": "http://localhost:8080/events",
+      "expectedStatus": 201,
+      "actualStatus": 201,
+      "passed": true,
+      "expectedNote": "Creates the event and credits the account by 150.00.",
+      "traceId": "trace-api-credit",
+      "request": {
+        "eventId": "evt-api-credit-20260613180958",
+        "accountId": "acct-api-output-20260613180958",
+        "type": "CREDIT",
+        "amount": 150.0,
+        "currency": "USD",
+        "eventTimestamp": "2026-06-13T18:09:58Z",
+        "metadata": {
+          "source": "codex-evidence",
+          "scenario": "expected-api-output",
+          "sequence": 1
+        }
+      },
+      "response": {
+        "eventId": "evt-api-credit-20260613180958",
+        "accountId": "acct-api-output-20260613180958",
+        "type": "CREDIT",
+        "amount": 150.0,
+        "currency": "USD",
+        "eventTimestamp": "2026-06-13T18:09:58Z",
+        "metadata": {
+          "source": "codex-evidence",
+          "scenario": "expected-api-output",
+          "sequence": 1
+        },
+        "status": "ACCEPTED",
+        "createdAt": "2026-06-13T18:09:58.744056147Z",
+        "traceId": "trace-api-credit"
+      }
+    },
+    {
+      "name": "Submit debit event",
+      "method": "POST",
+      "url": "http://localhost:8080/events",
+      "expectedStatus": 201,
+      "actualStatus": 201,
+      "passed": true,
+      "expectedNote": "Creates the second event and debits the account by 40.00.",
+      "traceId": "trace-api-debit",
+      "request": {
+        "eventId": "evt-api-debit-20260613180958",
+        "accountId": "acct-api-output-20260613180958",
+        "type": "DEBIT",
+        "amount": 40.0,
+        "currency": "USD",
+        "eventTimestamp": "2026-06-13T18:10:28Z",
+        "metadata": {
+          "source": "codex-evidence",
+          "scenario": "expected-api-output",
+          "sequence": 2
+        }
+      },
+      "response": {
+        "eventId": "evt-api-debit-20260613180958",
+        "accountId": "acct-api-output-20260613180958",
+        "type": "DEBIT",
+        "amount": 40.0,
+        "currency": "USD",
+        "eventTimestamp": "2026-06-13T18:10:28Z",
+        "metadata": {
+          "source": "codex-evidence",
+          "scenario": "expected-api-output",
+          "sequence": 2
+        },
+        "status": "ACCEPTED",
+        "createdAt": "2026-06-13T18:09:58.774078869Z",
+        "traceId": "trace-api-debit"
+      }
+    },
+    {
+      "name": "Repeat credit event",
+      "method": "POST",
+      "url": "http://localhost:8080/events",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "passed": true,
+      "expectedNote": "Duplicate event is idempotent: no second credit is applied.",
+      "traceId": "trace-api-duplicate",
+      "request": {
+        "eventId": "evt-api-credit-20260613180958",
+        "accountId": "acct-api-output-20260613180958",
+        "type": "CREDIT",
+        "amount": 150.0,
+        "currency": "USD",
+        "eventTimestamp": "2026-06-13T18:09:58Z",
+        "metadata": {
+          "source": "codex-evidence",
+          "scenario": "expected-api-output",
+          "sequence": 1
+        }
+      },
+      "response": {
+        "eventId": "evt-api-credit-20260613180958",
+        "accountId": "acct-api-output-20260613180958",
+        "type": "CREDIT",
+        "amount": 150.0,
+        "currency": "USD",
+        "eventTimestamp": "2026-06-13T18:09:58Z",
+        "metadata": {
+          "source": "codex-evidence",
+          "scenario": "expected-api-output",
+          "sequence": 1
+        },
+        "status": "ACCEPTED",
+        "createdAt": "2026-06-13T18:09:58.744056Z",
+        "traceId": "trace-api-credit"
+      }
+    },
+    {
+      "name": "Fetch credit event",
+      "method": "GET",
+      "url": "http://localhost:8080/events/evt-api-credit-20260613180958",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "passed": true,
+      "expectedNote": "Returns the stored gateway event by id.",
+      "traceId": "trace-api-get-event",
+      "request": null,
+      "response": {
+        "eventId": "evt-api-credit-20260613180958",
+        "accountId": "acct-api-output-20260613180958",
+        "type": "CREDIT",
+        "amount": 150.0,
+        "currency": "USD",
+        "eventTimestamp": "2026-06-13T18:09:58Z",
+        "metadata": {
+          "source": "codex-evidence",
+          "scenario": "expected-api-output",
+          "sequence": 1
+        },
+        "status": "ACCEPTED",
+        "createdAt": "2026-06-13T18:09:58.744056Z",
+        "traceId": "trace-api-credit"
+      }
+    },
+    {
+      "name": "List account events",
+      "method": "GET",
+      "url": "http://localhost:8080/events?account=acct-api-output-20260613180958",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "passed": true,
+      "expectedNote": "Returns the two submitted events for the account.",
+      "traceId": "trace-api-list-events",
+      "request": null,
+      "response": [
+        {
+          "eventId": "evt-api-credit-20260613180958",
+          "accountId": "acct-api-output-20260613180958",
+          "type": "CREDIT",
+          "amount": 150.0,
+          "currency": "USD",
+          "eventTimestamp": "2026-06-13T18:09:58Z",
+          "metadata": {
+            "source": "codex-evidence",
+            "scenario": "expected-api-output",
+            "sequence": 1
+          },
+          "status": "ACCEPTED",
+          "createdAt": "2026-06-13T18:09:58.744056Z",
+          "traceId": "trace-api-credit"
+        },
+        {
+          "eventId": "evt-api-debit-20260613180958",
+          "accountId": "acct-api-output-20260613180958",
+          "type": "DEBIT",
+          "amount": 40.0,
+          "currency": "USD",
+          "eventTimestamp": "2026-06-13T18:10:28Z",
+          "metadata": {
+            "source": "codex-evidence",
+            "scenario": "expected-api-output",
+            "sequence": 2
+          },
+          "status": "ACCEPTED",
+          "createdAt": "2026-06-13T18:09:58.774079Z",
+          "traceId": "trace-api-debit"
+        }
+      ]
+    },
+    {
+      "name": "Fetch account balance",
+      "method": "GET",
+      "url": "http://localhost:8081/accounts/acct-api-output-20260613180958/balance",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "passed": true,
+      "expectedNote": "Expected balance: 150.00 - 40.00 = 110.00 USD.",
+      "traceId": "trace-api-balance",
+      "request": null,
+      "response": {
+        "accountId": "acct-api-output-20260613180958",
+        "balance": 110.0,
+        "currency": "USD",
+        "traceId": "trace-api-balance"
+      }
+    },
+    {
+      "name": "Fetch account history",
+      "method": "GET",
+      "url": "http://localhost:8081/accounts/acct-api-output-20260613180958",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "passed": true,
+      "expectedNote": "Returns the account with two transaction records.",
+      "traceId": "trace-api-account",
+      "request": null,
+      "response": {
+        "accountId": "acct-api-output-20260613180958",
+        "balance": 110.0,
+        "currency": "USD",
+        "updatedAt": "2026-06-13T18:09:58.770008Z",
+        "transactions": [
+          {
+            "eventId": "evt-api-credit-20260613180958",
+            "accountId": "acct-api-output-20260613180958",
+            "type": "CREDIT",
+            "amount": 150.0,
+            "currency": "USD",
+            "eventTimestamp": "2026-06-13T18:09:58Z",
+            "createdAt": "2026-06-13T18:09:58.738513Z",
+            "traceId": "trace-api-credit"
+          },
+          {
+            "eventId": "evt-api-debit-20260613180958",
+            "accountId": "acct-api-output-20260613180958",
+            "type": "DEBIT",
+            "amount": 40.0,
+            "currency": "USD",
+            "eventTimestamp": "2026-06-13T18:10:28Z",
+            "createdAt": "2026-06-13T18:09:58.770179Z",
+            "traceId": "trace-api-debit"
+          }
+        ],
+        "traceId": "trace-api-account"
+      }
+    }
+  ]
+}

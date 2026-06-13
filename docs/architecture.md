@@ -102,3 +102,5 @@ Both services expose:
 - `/actuator/health`
 - `/actuator/metrics`
 - custom business counters
+- Swagger UI at `/swagger-ui.html`
+- OpenAPI JSON at `/v3/api-docs`

@@ -45,6 +45,7 @@ Modules:
 | Graceful degradation | Gateway returns structured `503` when Account Service is unavailable while local reads stay available. |
 | Resiliency | Gateway uses timeout, retry, and circuit breaker around downstream calls. |
 | Observability | JSON logs, health endpoints, actuator metrics, and custom counters are included. |
+| API documentation | Swagger UI and OpenAPI JSON are exposed for both services. |
 | Local execution | Maven Wrapper and Docker Compose are included. |
 | Verification | Unit, web, integration, client, configuration, and Docker smoke paths are covered. |
 
@@ -86,6 +87,24 @@ Default ports:
 ```powershell
 docker compose up --build
 ```
+
+## Swagger Evidence
+
+Gateway Swagger UI:
+
+![Gateway Swagger UI](docs/evidence/gateway-swagger-ui.png)
+
+Account Service Swagger UI:
+
+![Account Service Swagger UI](docs/evidence/account-service-swagger-ui.png)
+
+## API Output Evidence
+
+Expected API outputs captured from a live Docker Compose run:
+
+![Expected API Outputs](docs/evidence/api-output-evidence.png)
+
+The same run is also saved as copyable JSON and HTML in `docs/evidence/api-output-evidence.json` and `docs/evidence/api-output-evidence.html`.
 
 ## Main API Examples
 
@@ -141,6 +160,16 @@ Health:
 - `GET http://localhost:8081/health`
 - `GET http://localhost:8080/actuator/health`
 - `GET http://localhost:8081/actuator/health`
+
+Swagger UI:
+
+- Gateway: `http://localhost:8080/swagger-ui.html`
+- Account Service: `http://localhost:8081/swagger-ui.html`
+
+OpenAPI JSON:
+
+- Gateway: `http://localhost:8080/v3/api-docs`
+- Account Service: `http://localhost:8081/v3/api-docs`
 
 Custom metrics:
 

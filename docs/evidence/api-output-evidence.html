@@ -1,0 +1,232 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'>
+<title>API Output Evidence</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;color:#111827;background:#f8fafc}h1{margin-bottom:4px}section{background:white;border:1px solid #d8dee8;border-radius:8px;margin:18px 0;padding:18px}pre{white-space:pre-wrap;background:#0f172a;color:#e5e7eb;border-radius:8px;padding:14px;overflow:auto}.pass{color:#166534;font-weight:700}.meta{color:#475569}</style>
+</head><body>
+<h1>Expected API Outputs</h1>
+<p class='meta'>Generated from live Docker Compose HTTP responses at 2026-06-13T18:09:58.956209Z</p>
+<p><strong>Account:</strong> acct-api-output-20260613180958 | <strong>Expected final balance:</strong> 110.00 USD | <strong>Actual:</strong> 110.0 USD</p>
+<section>
+<h2>Submit credit event</h2>
+<p><code>POST http://localhost:8080/events</code></p>
+<p>Expected status: <strong>201</strong> | Actual status: <span class='pass'>201</span></p>
+<p>Creates the event and credits the account by 150.00.</p>
+<h3>Request</h3>
+<pre>{
+  &quot;eventId&quot;: &quot;evt-api-credit-20260613180958&quot;,
+  &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+  &quot;type&quot;: &quot;CREDIT&quot;,
+  &quot;amount&quot;: 150.0,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;eventTimestamp&quot;: &quot;2026-06-13T18:09:58Z&quot;,
+  &quot;metadata&quot;: {
+    &quot;source&quot;: &quot;codex-evidence&quot;,
+    &quot;scenario&quot;: &quot;expected-api-output&quot;,
+    &quot;sequence&quot;: 1
+  }
+}</pre>
+<h3>Response</h3>
+<pre>{
+  &quot;eventId&quot;: &quot;evt-api-credit-20260613180958&quot;,
+  &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+  &quot;type&quot;: &quot;CREDIT&quot;,
+  &quot;amount&quot;: 150.0,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;eventTimestamp&quot;: &quot;2026-06-13T18:09:58Z&quot;,
+  &quot;metadata&quot;: {
+    &quot;source&quot;: &quot;codex-evidence&quot;,
+    &quot;scenario&quot;: &quot;expected-api-output&quot;,
+    &quot;sequence&quot;: 1
+  },
+  &quot;status&quot;: &quot;ACCEPTED&quot;,
+  &quot;createdAt&quot;: &quot;2026-06-13T18:09:58.744056147Z&quot;,
+  &quot;traceId&quot;: &quot;trace-api-credit&quot;
+}</pre>
+</section>
+<section>
+<h2>Submit debit event</h2>
+<p><code>POST http://localhost:8080/events</code></p>
+<p>Expected status: <strong>201</strong> | Actual status: <span class='pass'>201</span></p>
+<p>Creates the second event and debits the account by 40.00.</p>
+<h3>Request</h3>
+<pre>{
+  &quot;eventId&quot;: &quot;evt-api-debit-20260613180958&quot;,
+  &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+  &quot;type&quot;: &quot;DEBIT&quot;,
+  &quot;amount&quot;: 40.0,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;eventTimestamp&quot;: &quot;2026-06-13T18:10:28Z&quot;,
+  &quot;metadata&quot;: {
+    &quot;source&quot;: &quot;codex-evidence&quot;,
+    &quot;scenario&quot;: &quot;expected-api-output&quot;,
+    &quot;sequence&quot;: 2
+  }
+}</pre>
+<h3>Response</h3>
+<pre>{
+  &quot;eventId&quot;: &quot;evt-api-debit-20260613180958&quot;,
+  &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+  &quot;type&quot;: &quot;DEBIT&quot;,
+  &quot;amount&quot;: 40.0,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;eventTimestamp&quot;: &quot;2026-06-13T18:10:28Z&quot;,
+  &quot;metadata&quot;: {
+    &quot;source&quot;: &quot;codex-evidence&quot;,
+    &quot;scenario&quot;: &quot;expected-api-output&quot;,
+    &quot;sequence&quot;: 2
+  },
+  &quot;status&quot;: &quot;ACCEPTED&quot;,
+  &quot;createdAt&quot;: &quot;2026-06-13T18:09:58.774078869Z&quot;,
+  &quot;traceId&quot;: &quot;trace-api-debit&quot;
+}</pre>
+</section>
+<section>
+<h2>Repeat credit event</h2>
+<p><code>POST http://localhost:8080/events</code></p>
+<p>Expected status: <strong>200</strong> | Actual status: <span class='pass'>200</span></p>
+<p>Duplicate event is idempotent: no second credit is applied.</p>
+<h3>Request</h3>
+<pre>{
+  &quot;eventId&quot;: &quot;evt-api-credit-20260613180958&quot;,
+  &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+  &quot;type&quot;: &quot;CREDIT&quot;,
+  &quot;amount&quot;: 150.0,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;eventTimestamp&quot;: &quot;2026-06-13T18:09:58Z&quot;,
+  &quot;metadata&quot;: {
+    &quot;source&quot;: &quot;codex-evidence&quot;,
+    &quot;scenario&quot;: &quot;expected-api-output&quot;,
+    &quot;sequence&quot;: 1
+  }
+}</pre>
+<h3>Response</h3>
+<pre>{
+  &quot;eventId&quot;: &quot;evt-api-credit-20260613180958&quot;,
+  &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+  &quot;type&quot;: &quot;CREDIT&quot;,
+  &quot;amount&quot;: 150.0,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;eventTimestamp&quot;: &quot;2026-06-13T18:09:58Z&quot;,
+  &quot;metadata&quot;: {
+    &quot;source&quot;: &quot;codex-evidence&quot;,
+    &quot;scenario&quot;: &quot;expected-api-output&quot;,
+    &quot;sequence&quot;: 1
+  },
+  &quot;status&quot;: &quot;ACCEPTED&quot;,
+  &quot;createdAt&quot;: &quot;2026-06-13T18:09:58.744056Z&quot;,
+  &quot;traceId&quot;: &quot;trace-api-credit&quot;
+}</pre>
+</section>
+<section>
+<h2>Fetch credit event</h2>
+<p><code>GET http://localhost:8080/events/evt-api-credit-20260613180958</code></p>
+<p>Expected status: <strong>200</strong> | Actual status: <span class='pass'>200</span></p>
+<p>Returns the stored gateway event by id.</p>
+<h3>Response</h3>
+<pre>{
+  &quot;eventId&quot;: &quot;evt-api-credit-20260613180958&quot;,
+  &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+  &quot;type&quot;: &quot;CREDIT&quot;,
+  &quot;amount&quot;: 150.0,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;eventTimestamp&quot;: &quot;2026-06-13T18:09:58Z&quot;,
+  &quot;metadata&quot;: {
+    &quot;source&quot;: &quot;codex-evidence&quot;,
+    &quot;scenario&quot;: &quot;expected-api-output&quot;,
+    &quot;sequence&quot;: 1
+  },
+  &quot;status&quot;: &quot;ACCEPTED&quot;,
+  &quot;createdAt&quot;: &quot;2026-06-13T18:09:58.744056Z&quot;,
+  &quot;traceId&quot;: &quot;trace-api-credit&quot;
+}</pre>
+</section>
+<section>
+<h2>List account events</h2>
+<p><code>GET http://localhost:8080/events?account=acct-api-output-20260613180958</code></p>
+<p>Expected status: <strong>200</strong> | Actual status: <span class='pass'>200</span></p>
+<p>Returns the two submitted events for the account.</p>
+<h3>Response</h3>
+<pre>[
+  {
+    &quot;eventId&quot;: &quot;evt-api-credit-20260613180958&quot;,
+    &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+    &quot;type&quot;: &quot;CREDIT&quot;,
+    &quot;amount&quot;: 150.0,
+    &quot;currency&quot;: &quot;USD&quot;,
+    &quot;eventTimestamp&quot;: &quot;2026-06-13T18:09:58Z&quot;,
+    &quot;metadata&quot;: {
+      &quot;source&quot;: &quot;codex-evidence&quot;,
+      &quot;scenario&quot;: &quot;expected-api-output&quot;,
+      &quot;sequence&quot;: 1
+    },
+    &quot;status&quot;: &quot;ACCEPTED&quot;,
+    &quot;createdAt&quot;: &quot;2026-06-13T18:09:58.744056Z&quot;,
+    &quot;traceId&quot;: &quot;trace-api-credit&quot;
+  },
+  {
+    &quot;eventId&quot;: &quot;evt-api-debit-20260613180958&quot;,
+    &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+    &quot;type&quot;: &quot;DEBIT&quot;,
+    &quot;amount&quot;: 40.0,
+    &quot;currency&quot;: &quot;USD&quot;,
+    &quot;eventTimestamp&quot;: &quot;2026-06-13T18:10:28Z&quot;,
+    &quot;metadata&quot;: {
+      &quot;source&quot;: &quot;codex-evidence&quot;,
+      &quot;scenario&quot;: &quot;expected-api-output&quot;,
+      &quot;sequence&quot;: 2
+    },
+    &quot;status&quot;: &quot;ACCEPTED&quot;,
+    &quot;createdAt&quot;: &quot;2026-06-13T18:09:58.774079Z&quot;,
+    &quot;traceId&quot;: &quot;trace-api-debit&quot;
+  }
+]</pre>
+</section>
+<section>
+<h2>Fetch account balance</h2>
+<p><code>GET http://localhost:8081/accounts/acct-api-output-20260613180958/balance</code></p>
+<p>Expected status: <strong>200</strong> | Actual status: <span class='pass'>200</span></p>
+<p>Expected balance: 150.00 - 40.00 = 110.00 USD.</p>
+<h3>Response</h3>
+<pre>{
+  &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+  &quot;balance&quot;: 110.0,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;traceId&quot;: &quot;trace-api-balance&quot;
+}</pre>
+</section>
+<section>
+<h2>Fetch account history</h2>
+<p><code>GET http://localhost:8081/accounts/acct-api-output-20260613180958</code></p>
+<p>Expected status: <strong>200</strong> | Actual status: <span class='pass'>200</span></p>
+<p>Returns the account with two transaction records.</p>
+<h3>Response</h3>
+<pre>{
+  &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+  &quot;balance&quot;: 110.0,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;updatedAt&quot;: &quot;2026-06-13T18:09:58.770008Z&quot;,
+  &quot;transactions&quot;: [
+    {
+      &quot;eventId&quot;: &quot;evt-api-credit-20260613180958&quot;,
+      &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+      &quot;type&quot;: &quot;CREDIT&quot;,
+      &quot;amount&quot;: 150.0,
+      &quot;currency&quot;: &quot;USD&quot;,
+      &quot;eventTimestamp&quot;: &quot;2026-06-13T18:09:58Z&quot;,
+      &quot;createdAt&quot;: &quot;2026-06-13T18:09:58.738513Z&quot;,
+      &quot;traceId&quot;: &quot;trace-api-credit&quot;
+    },
+    {
+      &quot;eventId&quot;: &quot;evt-api-debit-20260613180958&quot;,
+      &quot;accountId&quot;: &quot;acct-api-output-20260613180958&quot;,
+      &quot;type&quot;: &quot;DEBIT&quot;,
+      &quot;amount&quot;: 40.0,
+      &quot;currency&quot;: &quot;USD&quot;,
+      &quot;eventTimestamp&quot;: &quot;2026-06-13T18:10:28Z&quot;,
+      &quot;createdAt&quot;: &quot;2026-06-13T18:09:58.770179Z&quot;,
+      &quot;traceId&quot;: &quot;trace-api-debit&quot;
+    }
+  ],
+  &quot;traceId&quot;: &quot;trace-api-account&quot;
+}</pre>
+</section>
+</body></html>
