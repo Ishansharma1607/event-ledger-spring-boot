@@ -6,7 +6,7 @@
 
 **Architecture:** A root Maven project contains two Spring Boot modules: `event-gateway` and `account-service`. The Gateway persists incoming events in its own H2 database and synchronously calls the Account Service through a Resilience4j-protected REST client. The Account Service owns balances and transaction history in its own H2 database.
 
-**Tech Stack:** Java 21, Spring Boot 3.5.15.RELEASE, Maven Wrapper, Spring Web MVC, Spring Data JPA, H2, Bean Validation, Resilience4j, Micrometer/Actuator, Logstash Logback Encoder, JUnit 5, Spring Boot Test, OkHttp MockWebServer, Docker Compose.
+**Tech Stack:** Java 21, Spring Boot 3.5.15, Maven Wrapper, Spring Web MVC, Spring Data JPA, H2, Bean Validation, Resilience4j, Micrometer/Actuator, Logstash Logback Encoder, JUnit 5, Spring Boot Test, OkHttp MockWebServer, Docker Compose.
 
 ---
 
@@ -36,7 +36,7 @@
 
 - [ ] **Step 1: Add Maven wrapper scripts**
 
-Use Spring Initializr-generated Maven wrapper scripts for Boot `3.5.15.RELEASE`. The wrapper should download Maven automatically so Windows users can run `.\mvnw.cmd test`.
+Use Spring Initializr-generated Maven wrapper scripts for Boot `3.5.15`. The wrapper should download Maven automatically so Windows users can run `.\mvnw.cmd test`.
 
 - [ ] **Step 2: Add root Maven parent**
 
