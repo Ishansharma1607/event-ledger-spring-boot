@@ -1,0 +1,20 @@
+# Local assignment prompt and generated runtime files
+*.docx
+
+# Maven / Java
+target/
+*.class
+
+# IDE
+.idea/
+*.iml
+
+# Local databases and logs
+*.db
+*.mv.db
+*.trace.db
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
