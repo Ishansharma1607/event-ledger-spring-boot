@@ -1,0 +1,80 @@
+### Health - Gateway
+GET http://localhost:8080/health
+
+### Health - Account Service
+GET http://localhost:8081/health
+
+### Submit Credit Event
+POST http://localhost:8080/events
+Content-Type: application/json
+X-Trace-ID: trace-demo-001
+
+{
+  "eventId": "evt-001",
+  "accountId": "acct-123",
+  "type": "CREDIT",
+  "amount": 150.00,
+  "currency": "USD",
+  "eventTimestamp": "2026-05-15T14:02:11Z",
+  "metadata": {
+    "source": "mainframe-batch",
+    "batchId": "B-9042"
+  }
+}
+
+### Submit Debit Event
+POST http://localhost:8080/events
+Content-Type: application/json
+X-Trace-ID: trace-demo-002
+
+{
+  "eventId": "evt-002",
+  "accountId": "acct-123",
+  "type": "DEBIT",
+  "amount": 40.00,
+  "currency": "USD",
+  "eventTimestamp": "2026-05-15T14:05:11Z",
+  "metadata": {
+    "source": "mobile-app"
+  }
+}
+
+### Duplicate Submission - Should Not Double Apply
+POST http://localhost:8080/events
+Content-Type: application/json
+X-Trace-ID: trace-demo-001
+
+{
+  "eventId": "evt-001",
+  "accountId": "acct-123",
+  "type": "CREDIT",
+  "amount": 150.00,
+  "currency": "USD",
+  "eventTimestamp": "2026-05-15T14:02:11Z",
+  "metadata": {
+    "source": "mainframe-batch",
+    "batchId": "B-9042"
+  }
+}
+
+### Read One Event
+GET http://localhost:8080/events/evt-001
+X-Trace-ID: trace-demo-read
+
+### List Events For Account
+GET http://localhost:8080/events?account=acct-123
+X-Trace-ID: trace-demo-list
+
+### Read Account Balance
+GET http://localhost:8081/accounts/acct-123/balance
+X-Trace-ID: trace-demo-balance
+
+### Read Account Details
+GET http://localhost:8081/accounts/acct-123
+X-Trace-ID: trace-demo-account
+
+### Gateway Custom Metric
+GET http://localhost:8080/actuator/metrics/event_gateway_events_accepted_total
+
+### Account Service Custom Metric
+GET http://localhost:8081/actuator/metrics/account_service_transactions_applied_total
