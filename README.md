@@ -31,6 +31,23 @@ Modules:
 - `account-service`
 - `event-gateway`
 
+## Assessment Checklist
+
+| Requirement | Implementation |
+| --- | --- |
+| Two services | `event-gateway` and `account-service` are separate Spring Boot applications. |
+| Separate databases | Each service owns its own embedded H2 database. |
+| Event submission | `POST /events` validates, traces, persists, and forwards events. |
+| Account ownership | Account Service owns balances and transaction history. |
+| Idempotency | Duplicate `eventId` submissions do not double-apply balance changes. |
+| Out-of-order events | Event and transaction listings sort by `eventTimestamp`, then `eventId`. |
+| Trace propagation | `X-Trace-ID` is generated, returned, logged, and propagated downstream. |
+| Graceful degradation | Gateway returns structured `503` when Account Service is unavailable while local reads stay available. |
+| Resiliency | Gateway uses timeout, retry, and circuit breaker around downstream calls. |
+| Observability | JSON logs, health endpoints, actuator metrics, and custom counters are included. |
+| Local execution | Maven Wrapper and Docker Compose are included. |
+| Verification | Unit, web, integration, client, configuration, and Docker smoke paths are covered. |
+
 ## Run Tests
 
 ```powershell
