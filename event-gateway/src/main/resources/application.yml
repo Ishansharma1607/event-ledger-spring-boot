@@ -1,0 +1,65 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: event-gateway
+  datasource:
+    url: ${GATEWAY_DB_URL:jdbc:h2:mem:eventgatewaydb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    driver-class-name: org.h2.Driver
+    username: ${GATEWAY_DB_USERNAME:sa}
+    password: ${GATEWAY_DB_PASSWORD:}
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+
+account-service:
+  base-url: ${ACCOUNT_SERVICE_BASE_URL:http://localhost:8081}
+  connect-timeout-millis: ${ACCOUNT_SERVICE_CONNECT_TIMEOUT_MILLIS:1000}
+  read-timeout-millis: ${ACCOUNT_SERVICE_READ_TIMEOUT_MILLIS:2000}
+
+resilience4j:
+  retry:
+    instances:
+      account-service:
+        max-attempts: 3
+        wait-duration: 200ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - com.mphasis.eventledger.gateway.client.AccountClientException
+  circuitbreaker:
+    instances:
+      account-service:
+        sliding-window-type: count_based
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 2
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  level:
+    root: INFO
+    com.mphasis.eventledger: INFO

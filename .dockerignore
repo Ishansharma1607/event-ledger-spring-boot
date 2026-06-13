@@ -1,0 +1,8 @@
+.git
+.idea
+target
+**/target
+*.iml
+*.docx
+*.log
+.worktrees
