@@ -1,12 +1,17 @@
 package com.mphasis.eventledger.account;
 
 import com.mphasis.eventledger.account.domain.TransactionType;
+import com.mphasis.eventledger.account.observability.AccountMetrics;
 import com.mphasis.eventledger.account.service.AccountIdMismatchException;
 import com.mphasis.eventledger.account.service.AccountTransactionService;
 import com.mphasis.eventledger.account.service.ApplyTransactionCommand;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
 import java.math.BigDecimal;
@@ -16,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@Import(AccountTransactionService.class)
+@Import({AccountTransactionService.class, AccountMetrics.class, AccountTransactionServiceTest.MetricsTestConfig.class})
 class AccountTransactionServiceTest {
 
     @Autowired
@@ -99,5 +104,14 @@ class AccountTransactionServiceTest {
                 Instant.parse(timestamp),
                 "trace-abc"
         );
+    }
+
+    @TestConfiguration
+    static class MetricsTestConfig {
+
+        @Bean
+        MeterRegistry meterRegistry() {
+            return new SimpleMeterRegistry();
+        }
     }
 }

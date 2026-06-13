@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mphasis.eventledger.gateway.api.EventRequest;
 import com.mphasis.eventledger.gateway.client.AccountClient;
+import com.mphasis.eventledger.gateway.client.AccountClientException;
 import com.mphasis.eventledger.gateway.client.AccountTransactionRequest;
 import com.mphasis.eventledger.gateway.domain.EventEntity;
+import com.mphasis.eventledger.gateway.observability.GatewayMetrics;
 import com.mphasis.eventledger.gateway.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +19,26 @@ public class EventService {
     private final EventRepository eventRepository;
     private final AccountClient accountClient;
     private final ObjectMapper objectMapper;
+    private final GatewayMetrics metrics;
 
-    public EventService(EventRepository eventRepository, AccountClient accountClient, ObjectMapper objectMapper) {
+    public EventService(
+            EventRepository eventRepository,
+            AccountClient accountClient,
+            ObjectMapper objectMapper,
+            GatewayMetrics metrics
+    ) {
         this.eventRepository = eventRepository;
         this.accountClient = accountClient;
         this.objectMapper = objectMapper;
+        this.metrics = metrics;
     }
 
     public SubmitEventResult submit(EventRequest request, String traceId) {
         return eventRepository.findById(request.eventId())
-                .map(event -> new SubmitEventResult(false, event))
+                .map(event -> {
+                    metrics.duplicateEvent();
+                    return new SubmitEventResult(false, event);
+                })
                 .orElseGet(() -> createEvent(request, traceId));
     }
 
@@ -40,16 +52,22 @@ public class EventService {
     }
 
     private SubmitEventResult createEvent(EventRequest request, String traceId) {
-        accountClient.applyTransaction(new AccountTransactionRequest(
-                request.eventId(),
-                request.accountId(),
-                request.type(),
-                request.amount(),
-                request.currency(),
-                request.eventTimestamp()
-        ), traceId);
+        try {
+            accountClient.applyTransaction(new AccountTransactionRequest(
+                    request.eventId(),
+                    request.accountId(),
+                    request.type(),
+                    request.amount(),
+                    request.currency(),
+                    request.eventTimestamp()
+            ), traceId);
+        } catch (AccountClientException ex) {
+            metrics.downstreamFailure();
+            throw ex;
+        }
 
         var event = eventRepository.save(EventEntity.accepted(request, metadataJson(request), traceId));
+        metrics.eventAccepted();
         return new SubmitEventResult(true, event);
     }
 

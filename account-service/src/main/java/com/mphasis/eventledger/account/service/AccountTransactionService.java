@@ -2,6 +2,7 @@ package com.mphasis.eventledger.account.service;
 
 import com.mphasis.eventledger.account.domain.AccountEntity;
 import com.mphasis.eventledger.account.domain.AccountTransactionEntity;
+import com.mphasis.eventledger.account.observability.AccountMetrics;
 import com.mphasis.eventledger.account.repository.AccountRepository;
 import com.mphasis.eventledger.account.repository.AccountTransactionRepository;
 import org.springframework.stereotype.Service;
@@ -14,13 +15,16 @@ public class AccountTransactionService {
 
     private final AccountRepository accountRepository;
     private final AccountTransactionRepository transactionRepository;
+    private final AccountMetrics metrics;
 
     public AccountTransactionService(
             AccountRepository accountRepository,
-            AccountTransactionRepository transactionRepository
+            AccountTransactionRepository transactionRepository,
+            AccountMetrics metrics
     ) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
+        this.metrics = metrics;
     }
 
     @Transactional
@@ -31,6 +35,7 @@ public class AccountTransactionService {
 
         var duplicate = transactionRepository.findById(command.eventId());
         if (duplicate.isPresent()) {
+            metrics.duplicateTransaction();
             var transaction = duplicate.get();
             var account = accountRepository.findById(transaction.getAccountId())
                     .orElseThrow(() -> new AccountNotFoundException(transaction.getAccountId()));
@@ -62,6 +67,7 @@ public class AccountTransactionService {
                 command.traceId()
         );
         transactionRepository.save(transaction);
+        metrics.transactionApplied();
 
         return new ApplyTransactionResult(
                 true,
