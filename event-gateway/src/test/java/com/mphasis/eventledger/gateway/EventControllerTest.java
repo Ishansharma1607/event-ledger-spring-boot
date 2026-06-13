@@ -161,6 +161,16 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.eventId").value("evt-gw-ok"));
     }
 
+    @Test
+    void openApiDocsDescribeGatewayEndpoints() throws Exception {
+        mockMvc.perform(get("/v3/api-docs"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.openapi").exists())
+                .andExpect(jsonPath("$.info.title").value("Event Gateway API"))
+                .andExpect(jsonPath("$.paths['/events']").exists())
+                .andExpect(jsonPath("$.paths['/events/{id}']").exists());
+    }
+
     private EventRequest request(String eventId, String accountId, String amount, String timestamp) {
         return new EventRequest(
                 eventId,

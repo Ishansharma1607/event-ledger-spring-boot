@@ -130,6 +130,16 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.transactions[1].eventId").value("evt-late"));
     }
 
+    @Test
+    void openApiDocsDescribeAccountEndpoints() throws Exception {
+        mockMvc.perform(get("/v3/api-docs"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.openapi").exists())
+                .andExpect(jsonPath("$.info.title").value("Account Service API"))
+                .andExpect(jsonPath("$.paths['/accounts/{accountId}/transactions']").exists())
+                .andExpect(jsonPath("$.paths['/accounts/{accountId}/balance']").exists());
+    }
+
     private ApplyTransactionRequest request(String eventId, String accountId, TransactionType type, String amount) {
         return request(eventId, accountId, type, amount, "2026-05-15T14:02:11Z");
     }
